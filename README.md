@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Application de Gestion de Pension de Chevaux
 
-## Getting Started
+Application web moderne de gestion de pension de chevaux développée avec Next.js, TypeScript, Prisma, et PostgreSQL.
 
-First, run the development server:
+## 🚀 Stack Technique
+
+- **Framework:** Next.js 15 (App Router)
+- **Langage:** TypeScript 5+
+- **Base de données:** PostgreSQL + Prisma ORM
+- **Styling:** Tailwind CSS
+- **Validation:** Zod
+- **Formulaires:** React Hook Form
+
+## 📋 Prérequis
+
+- Node.js 20+
+- Docker & Docker Compose (pour la base de données locale)
+
+## 🛠️ Installation
+
+1. **Cloner le projet**
+```bash
+git clone <repository-url>
+cd equigestion
+```
+
+2. **Installer les dépendances**
+```bash
+npm install
+```
+
+3. **Configurer l'environnement**
+```bash
+cp .env.example .env
+```
+
+4. **Lancer PostgreSQL avec Docker**
+```bash
+docker-compose up -d
+```
+
+5. **Exécuter les migrations Prisma**
+```bash
+npx prisma migrate dev
+```
+
+6. **Générer le client Prisma**
+```bash
+npx prisma generate
+```
+
+## 🏃 Développement
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧪 Commandes Utiles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Lancer le serveur de développement
+npm run dev
 
-## Learn More
+# Build de production
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Démarrer en mode production
+npm start
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Linter
+npm run lint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Formater le code
+npx prettier --write .
 
-## Deploy on Vercel
+# Ouvrir Prisma Studio (UI pour la base de données)
+npx prisma studio
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Créer une nouvelle migration
+npx prisma migrate dev --name <nom_migration>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🐳 Docker
+
+### Développement Local
+
+```bash
+# Démarrer la base de données
+docker-compose up -d
+
+# Arrêter la base de données
+docker-compose down
+
+# Supprimer les données (attention !)
+docker-compose down -v
+```
+
+### Build pour Production (Cloud Run)
+
+```bash
+# Build l'image Docker
+docker build -t equigestion .
+
+# Tester localement
+docker run -p 8080:8080 -e DATABASE_URL="<url>" equigestion
+```
+
+## 📁 Structure du Projet
+
+```
+equigestion/
+├── src/
+│   ├── app/              # Routes Next.js (App Router)
+│   ├── components/       # Composants React
+│   ├── lib/             # Utilitaires (db client, etc.)
+│   └── types/           # Types TypeScript
+├── prisma/
+│   ├── schema.prisma    # Schéma de base de données
+│   └── migrations/      # Migrations
+├── public/              # Assets statiques
+├── Dockerfile           # Configuration Docker
+└── docker-compose.yml   # PostgreSQL local
+```
+
+## 🌍 Déploiement (Google Cloud Run)
+
+Documentation à venir pour le déploiement en production.
+
+## 📝 License
+
+Propriétaire

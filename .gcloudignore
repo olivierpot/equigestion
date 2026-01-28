@@ -1,0 +1,10 @@
+# Ignore deployment secrets and credentials
+.gcloud/
+*.key
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+# Keep these
+!cloudbuild.yaml
