@@ -147,8 +147,21 @@ else
 fi
 echo ""
 
-# Étape 8: Build et Push
-echo -e "${GREEN}🐳 Étape 8/9 - Build et Push de l'image Docker${NC}"
+# Étape 8: Configuration Google Cloud Storage
+echo -e "${GREEN}📸 Étape 8/10 - Configuration Google Cloud Storage${NC}"
+BUCKET_NAME="${PROJECT_ID}-photos"
+
+if gsutil ls -b gs://$BUCKET_NAME 2>/dev/null; then
+  echo "⚠️  Bucket GCS existe déjà"
+else
+  gsutil mb -l $REGION gs://$BUCKET_NAME
+  gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME
+  echo "✅ Bucket GCS créé et configuré en public"
+fi
+echo ""
+
+# Étape 9: Build et Push
+echo -e "${GREEN}🐳 Étape 9/10 - Build et Push de l'image Docker${NC}"
 IMAGE_NAME="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${SERVICE_NAME}:latest"
 echo "Building $IMAGE_NAME..."
 
@@ -159,8 +172,8 @@ docker push $IMAGE_NAME
 echo "✅ Image Docker pushée"
 echo ""
 
-# Étape 9: Déployer sur Cloud Run
-echo -e "${GREEN}🚀 Étape 9/9 - Déploiement sur Cloud Run${NC}"
+# Étape 10: Déployer sur Cloud Run
+echo -e "${GREEN}🚀 Étape 10/10 - Déploiement sur Cloud Run${NC}"
 gcloud run deploy $SERVICE_NAME \
   --image=$IMAGE_NAME \
   --region=$REGION \
@@ -172,7 +185,7 @@ gcloud run deploy $SERVICE_NAME \
   --max-instances=3 \
   --add-cloudsql-instances=$CONNECTION_NAME \
   --set-secrets=DATABASE_URL=database-url:latest \
-  --set-env-vars="NODE_ENV=production"
+  --set-env-vars="NODE_ENV=production,GCS_BUCKET_NAME=${BUCKET_NAME},GCS_PROJECT_ID=${PROJECT_ID}"
 
 APP_URL=$(gcloud run services describe $SERVICE_NAME --region=$REGION --format='value(status.url)')
 
