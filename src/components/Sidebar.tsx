@@ -3,22 +3,26 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import {
     Home,
     CircleUser as HorseIcon,
     Users,
+    UserCheck,
     Calendar,
     Stethoscope,
     Settings,
     LogOut,
     Menu,
-    X
+    X,
+    Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
     { name: "Accueil", href: "/", icon: Home },
     { name: "Pensionnaires", href: "/horses", icon: HorseIcon },
+    { name: "Propriétaires", href: "/proprietaires", icon: UserCheck },
     { name: "Professionnels", href: "/providers", icon: Users },
     { name: "Rendez-vous", href: "/appointments", icon: Calendar },
     { name: "Médical", href: "/medical", icon: Stethoscope },
@@ -26,7 +30,10 @@ const navigation = [
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { data: session } = useSession();
     const [isOpen, setIsOpen] = useState(false);
+
+    const isAdmin = session?.user?.role === "ADMIN";
 
     // Close sidebar when clicking a link on mobile
     const handleLinkClick = () => {
@@ -114,6 +121,30 @@ export default function Sidebar() {
                 </nav>
 
                 <div className="p-6 border-t bg-slate-50 space-y-2">
+                    {/* Afficher le nom de l'utilisateur */}
+                    {session?.user && (
+                        <div className="px-4 py-3 mb-2">
+                            <p className="text-sm font-black text-slate-900 truncate">
+                                {session.user.name || session.user.email}
+                            </p>
+                            <p className="text-xs text-slate-500 font-medium truncate">
+                                {session.user.email}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Lien Admin (visible uniquement pour les admins) */}
+                    {isAdmin && (
+                        <Link
+                            href="/admin"
+                            onClick={handleLinkClick}
+                            className="flex items-center gap-4 px-4 py-3 text-base font-bold rounded-2xl text-amber-600 hover:bg-amber-50 transition-all group"
+                        >
+                            <Shield className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                            Administration
+                        </Link>
+                    )}
+
                     <Link
                         href="/settings"
                         onClick={handleLinkClick}
@@ -123,6 +154,7 @@ export default function Sidebar() {
                         Paramètres
                     </Link>
                     <button
+                        onClick={() => signOut({ callbackUrl: "/login" })}
                         className="flex w-full items-center gap-4 px-4 py-3 text-base font-semibold rounded-2xl text-red-500 hover:bg-red-500/10 transition-all group"
                     >
                         <LogOut className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" />

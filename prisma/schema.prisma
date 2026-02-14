@@ -11,14 +11,25 @@ datasource db {
 }
 
 
-// Modèle utilisateur (Gérant / Staff)
+// Modèle utilisateur (Admin / Gérant)
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  password  String
   name      String?
-  role      String   @default("MANAGER") // Potentiel pour MANAGER, STAFF
+  role      String   @default("MANAGER") // ADMIN ou MANAGER
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations avec les données de la pension
+  owners           Owner[]
+  horses           Horse[]
+  groups           Group[]
+  providers        Provider[]
+  appointments     Appointment[]
+  healthEvents     HealthEvent[]
+  medicalTrackings MedicalTracking[]
 }
 
 // Propriétaire du cheval
@@ -27,6 +38,8 @@ model Owner {
   name      String
   email     String?
   phone     String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   horses    Horse[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -35,32 +48,38 @@ model Owner {
 // Groupe / Emplacement (ex: Groupe A, Box, Pré)
 model Group {
   id        String   @id @default(cuid())
-  name      String   @unique
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   horses    Horse[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([name, userId])
 }
 
 // Cheval (Pensionnaire)
 model Horse {
-  id              String           @id @default(cuid())
+  id              String            @id @default(cuid())
   name            String
   breed           String?
   photoUrl        String?
-  chipNumber      String?          @unique
+  chipNumber      String?           @unique
   foodRation      String?
   groupId         String?
-  group           Group?           @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  group           Group?            @relation(fields: [groupId], references: [id], onDelete: SetNull)
   ownerId         String
-  owner           Owner            @relation(fields: [ownerId], references: [id])
-  appointments    Appointment[]    @relation("HorseAppointments")
+  owner           Owner             @relation(fields: [ownerId], references: [id])
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments    Appointment[]     @relation("HorseAppointments")
   healthEvents    HealthEvent[]
   medicalTracking MedicalTracking[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
-// Spécialité de professionnel (Vétérinaire, Maréchal, etc.)
+// Spécialité de professionnel (Vétérinaire, Maréchal, etc.) - PARTAGEE
 model Specialty {
   id        String     @id @default(cuid())
   name      String     @unique
@@ -77,6 +96,8 @@ model Provider {
   specialtyId  String
   specialty    Specialty     @relation(fields: [specialtyId], references: [id])
   nextVisit    DateTime?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   appointments Appointment[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -93,16 +114,18 @@ enum AppointmentType {
 
 // Rendez-vous
 model Appointment {
-  id              String          @id @default(cuid())
-  date            DateTime
-  type            AppointmentType
-  providerId      String
-  provider        Provider        @relation(fields: [providerId], references: [id])
-  horses          Horse[]         @relation("HorseAppointments")
-  status          String          @default("PLANNED") // PLANNED, COMPLETED, CANCELLED
-  completionNote  String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id             String          @id @default(cuid())
+  date           DateTime
+  type           AppointmentType
+  providerId     String
+  provider       Provider        @relation(fields: [providerId], references: [id])
+  horses         Horse[]         @relation("HorseAppointments")
+  status         String          @default("PLANNED") // PLANNED, COMPLETED, CANCELLED
+  completionNote String?
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 // Événement de santé (Historique/Tracé sanitaire)
@@ -113,29 +136,33 @@ model HealthEvent {
   note      String?
   horseId   String
   horse     Horse    @relation(fields: [horseId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
 // Suivi médical intensif (Pathologie / Accident)
 model MedicalTracking {
-  id               String            @id @default(cuid())
-  horseId          String
-  horse            Horse             @relation(fields: [horseId], references: [id])
-  symptoms         String
-  treatment        String?
-  status           String            @default("ONGOING") // ONGOING, RESOLVED
-  history          MedicalHistory[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  id        String           @id @default(cuid())
+  horseId   String
+  horse     Horse            @relation(fields: [horseId], references: [id])
+  symptoms  String
+  treatment String?
+  status    String           @default("ONGOING") // ONGOING, RESOLVED
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history   MedicalHistory[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }
 
 // Relevé quotidien dans un suivi médical (ex: température)
 model MedicalHistory {
-  id                String          @id @default(cuid())
-  trackingId        String
-  tracking          MedicalTracking @relation(fields: [trackingId], references: [id])
-  date              DateTime        @default(now())
-  temperature       Float?
-  observation       String?
-  treatmentApplied  Boolean         @default(false)
+  id               String          @id @default(cuid())
+  trackingId       String
+  tracking         MedicalTracking @relation(fields: [trackingId], references: [id])
+  date             DateTime        @default(now())
+  temperature      Float?
+  observation      String?
+  treatmentApplied Boolean         @default(false)
 }

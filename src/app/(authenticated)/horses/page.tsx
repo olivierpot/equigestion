@@ -1,4 +1,5 @@
-import { Search, Filter, ChevronRight } from "lucide-react";
+import { ChevronRight, Settings } from "lucide-react";
+import Link from "next/link";
 import { getHorses, getOwners, getGroups } from "@/lib/actions";
 import AddHorseButton from "@/components/AddHorseButton";
 import EditHorseButton from "@/components/EditHorseButton";
@@ -14,35 +15,18 @@ export default async function HorsesPage() {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Pensionnaires</h1>
-                    <p className="text-muted-foreground mt-1">Gérez et suivez tous les chevaux de la structure.</p>
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900">Pensionnaires</h1>
+                    <p className="text-slate-500 mt-1 font-medium">Gérez et suivez tous les chevaux de la structure.</p>
                 </div>
-                <div className="flex gap-3">
-                    <AddHorseButton owners={owners} groups={groups} />
-                </div>
-            </div>
-
-            {/* Filters and Search */}
-            <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input
-                        type="text"
-                        placeholder="Rechercher un cheval, un propriétaire..."
-                        className="w-full pl-10 pr-4 py-2 bg-card border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                    />
-                </div>
-                <div className="flex gap-2">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-xl hover:bg-secondary transition-colors text-sm font-medium">
-                        <Filter className="h-4 w-4" />
-                        Filtrer
-                    </button>
-                    <a
+                <div className="flex items-center gap-3">
+                    <Link
                         href="/settings/groups"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-xl hover:bg-secondary transition-colors text-sm font-medium"
+                        className="inline-flex items-center gap-2 px-5 py-3 bg-white border-2 border-slate-100 text-slate-600 hover:text-primary hover:border-primary/20 rounded-2xl transition-all shadow-sm active:scale-95 text-sm font-bold"
                     >
+                        <Settings className="h-5 w-5" />
                         Gérer les groupes
-                    </a>
+                    </Link>
+                    <AddHorseButton owners={owners} groups={groups} />
                 </div>
             </div>
 

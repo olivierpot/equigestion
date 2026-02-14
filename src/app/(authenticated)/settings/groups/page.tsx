@@ -10,13 +10,13 @@ export default async function GroupsPage() {
             <div className="flex items-center gap-4">
                 <a
                     href="/horses"
-                    className="p-2 hover:bg-card border rounded-xl transition-colors"
+                    className="p-3 hover:bg-white border-2 border-slate-100 rounded-2xl transition-all shadow-sm active:scale-90"
                 >
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-6 w-6 text-slate-900" />
                 </a>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Gestion des Groupes</h1>
-                    <p className="text-muted-foreground mt-1">Créez et organisez les emplacements de votre structure.</p>
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900">Gestion des groupes</h1>
+                    <p className="text-slate-500 mt-1 font-medium text-lg">Créez et organisez les emplacements de votre structure.</p>
                 </div>
             </div>
 

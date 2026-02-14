@@ -1,4 +1,4 @@
-import { Search, Phone, Mail, Calendar, Settings, Users } from "lucide-react";
+import { Phone, Mail, Calendar, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { getProviders, getSpecialties } from "@/lib/actions";
 import AddProviderButton from "@/components/AddProviderButton";
@@ -21,33 +21,17 @@ export default async function ProvidersPage() {
                 <div className="flex items-center gap-3">
                     <Link
                         href="/settings/specialties"
-                        className="p-3 bg-white border-2 border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 rounded-2xl transition-all shadow-sm active:scale-90"
-                        title="Gérer les spécialités"
+                        className="inline-flex items-center gap-2 px-5 py-3 bg-white border-2 border-slate-100 text-slate-600 hover:text-primary hover:border-primary/20 rounded-2xl transition-all shadow-sm active:scale-95 text-sm font-bold"
                     >
-                        <Settings className="h-6 w-6" />
+                        <Settings className="h-5 w-5" />
+                        Gérer les spécialités
                     </Link>
                     <AddProviderButton specialties={specialties} />
                 </div>
             </div>
 
-            {/* Search and List */}
+            {/* List */}
             <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50">
-                <div className="p-8 border-b bg-slate-50/50 flex flex-col sm:flex-row gap-6 justify-between items-center">
-                    <div className="relative w-full sm:w-96">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Rechercher par nom ou spécialité..."
-                            className="w-full pl-12 pr-6 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-primary transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300 shadow-sm"
-                        />
-                    </div>
-                    <div className="flex gap-3 w-full sm:w-auto">
-                        <button className="flex-1 sm:flex-none px-6 py-3 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl text-sm font-black hover:border-primary/20 hover:text-primary transition-all shadow-sm">
-                            Toutes les spécialités
-                        </button>
-                    </div>
-                </div>
-
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>

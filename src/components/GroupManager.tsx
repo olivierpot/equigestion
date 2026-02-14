@@ -57,23 +57,23 @@ export default function GroupManager({ initialGroups }: GroupManagerProps) {
     return (
         <div className="space-y-6">
             {/* Add Group */}
-            <div className="bg-card border rounded-2xl p-6 shadow-sm">
-                <h3 className="text-lg font-bold mb-4">Ajouter un groupe</h3>
-                <div className="flex gap-3">
+            <div className="bg-white border-2 border-slate-100 rounded-[2rem] p-8 shadow-xl shadow-slate-200/50">
+                <h3 className="text-xl font-black mb-6 text-slate-900">Ajouter un groupe</h3>
+                <div className="flex gap-4">
                     <input
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         placeholder="Ex: Groupe D, Box Nord..."
-                        className="flex-1 px-4 py-2.5 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                        className="flex-1 px-5 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all font-bold text-slate-900 placeholder:text-slate-300"
                         onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
                     />
                     <button
                         onClick={handleAdd}
                         disabled={isPending || !newName.trim()}
-                        className="px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                        className="px-8 py-3.5 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-primary/20"
                     >
-                        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-5 w-5" />}
+                        {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-6 w-6" />}
                         Ajouter
                     </button>
                 </div>
@@ -84,7 +84,7 @@ export default function GroupManager({ initialGroups }: GroupManagerProps) {
                 {groups.map((group) => (
                     <div
                         key={group.id}
-                        className="bg-card border rounded-2xl p-4 flex items-center justify-between hover:border-primary/20 transition-all"
+                        className="bg-white border-2 border-slate-100 rounded-2xl p-5 flex items-center justify-between hover:border-primary/20 transition-all shadow-sm"
                     >
                         {editingId === group.id ? (
                             <div className="flex-1 flex gap-2">
@@ -93,42 +93,40 @@ export default function GroupManager({ initialGroups }: GroupManagerProps) {
                                     type="text"
                                     value={editingName}
                                     onChange={(e) => setEditingName(e.target.value)}
-                                    className="flex-1 px-3 py-1.5 bg-background border rounded-lg focus:outline-none font-medium"
+                                    className="flex-1 px-4 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-primary font-bold text-slate-900"
                                     onKeyDown={(e) => e.key === 'Enter' && handleUpdate(group.id)}
                                 />
                                 <button
                                     onClick={() => handleUpdate(group.id)}
-                                    className="p-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                                    className="p-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors shadow-lg shadow-green-500/20"
                                 >
-                                    <Check className="h-4 w-4" />
+                                    <Check className="h-5 w-5" />
                                 </button>
                                 <button
                                     onClick={() => setEditingId(null)}
-                                    className="p-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                    className="p-2 bg-slate-400 text-white rounded-xl hover:bg-slate-500 transition-colors shadow-lg shadow-slate-400/20"
                                 >
-                                    <X className="h-4 w-4" />
+                                    <X className="h-5 w-5" />
                                 </button>
                             </div>
                         ) : (
                             <>
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-foreground">{group.name}</span>
-                                </div>
+                                <span className="font-black text-slate-900 text-lg">{group.name}</span>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => {
                                             setEditingId(group.id);
                                             setEditingName(group.name);
                                         }}
-                                        className="p-2 hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg transition-all"
+                                        className="p-2.5 hover:bg-slate-100 text-slate-400 hover:text-slate-900 rounded-xl transition-all"
                                     >
-                                        <Edit2 className="h-4 w-4" />
+                                        <Edit2 className="h-5 w-5" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(group.id)}
-                                        className="p-2 hover:bg-red-500/10 text-muted-foreground hover:text-red-500 rounded-lg transition-all"
+                                        className="p-2.5 hover:bg-red-50 text-slate-300 hover:text-red-500 rounded-xl transition-all"
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash2 className="h-5 w-5" />
                                     </button>
                                 </div>
                             </>
@@ -136,7 +134,7 @@ export default function GroupManager({ initialGroups }: GroupManagerProps) {
                     </div>
                 ))}
                 {groups.length === 0 && !isPending && (
-                    <div className="col-span-full py-12 text-center text-muted-foreground border-2 border-dashed rounded-2xl">
+                    <div className="col-span-full py-20 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-[2rem] font-bold">
                         Aucun groupe créé. Commencez par en ajouter un.
                     </div>
                 )}
